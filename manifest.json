@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Conversor de MAC Address Flutuante",
+  "version": "1.0",
+  "description": "Converte MAC Addresses para diferentes formatos compatíveis com equipamentos de rede (HP, Cisco, etc.), em uma janela flutuante.",
+  "author": "Thomas Marcelino <lage.thomas@gmail.com>",
+  "homepage_url": "https://wpmasters.com.br",
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    },
+    "default_title": "Conversor de MAC Address"
+  },
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": ["scripting"],
+  "host_permissions": ["<all_urls>"]
+}
