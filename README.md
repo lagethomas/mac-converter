@@ -48,7 +48,8 @@ edge://extensions/
 
 ## 🖼️ Capturas de Tela
 
-> *(adicione aqui prints do popup da extensão mostrando a conversão e cópia de MACs)*  
+<img width="355" height="592" alt="image" src="https://github.com/user-attachments/assets/841e9d06-a388-4e26-a725-0ff1e3c53063" />
+
 
 ## 🔧 Tecnologias
 
