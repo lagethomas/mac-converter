@@ -24,5 +24,48 @@ Uma extensão simples e eficiente para converter **MAC Addresses** em diferentes
 
 ## 📦 Instalação
 
+### 🔹 Google Chrome
 1. Clone ou baixe este repositório.  
-2. No **Google Chrome/Edge/Brave**, acesse:  
+2. No navegador, acesse:  
+
+chrome://extensions/
+
+3. Ative o **Modo do desenvolvedor** (canto superior direito).  
+4. Clique em **"Carregar sem compactação"**.  
+5. Selecione a pasta do projeto.  
+6. A extensão estará disponível no menu de extensões do Chrome.  
+
+### 🔹 Microsoft Edge
+1. Clone ou baixe este repositório.  
+2. No navegador, acesse:
+
+edge://extensions/
+
+3. Ative o **Modo do desenvolvedor** (canto inferior esquerdo).  
+4. Clique em **"Carregar sem compactação"**.  
+5. Selecione a pasta do projeto.  
+6. A extensão aparecerá no menu de extensões do Edge.  
+
+## 🖼️ Capturas de Tela
+
+> *(adicione aqui prints do popup da extensão mostrando a conversão e cópia de MACs)*  
+
+## 🔧 Tecnologias
+
+- HTML5  
+- CSS3  
+- JavaScript  
+
+## 📌 Contribuição
+
+Contribuições são bem-vindas!  
+Abra uma **issue** ou envie um **pull request** para melhorias, novos formatos ou ajustes.  
+
+## 📄 Licença
+
+Este projeto está sob a licença **MIT**.  
+Sinta-se livre para usar, modificar e distribuir.  
+
+---
+Feito com ❤️ para facilitar a vida de quem trabalha com redes.
+
