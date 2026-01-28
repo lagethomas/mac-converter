@@ -1,10 +1,10 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const macInput = document.getElementById('macInput');
     const macError = document.getElementById('macError');
-    const generateBtn = document.getElementById('generateBtn');
-    const copyMessage = document.getElementById('copyMessage'); // Referência à mensagem de copiado
+    const resultsContainer = document.getElementById('results');
+    const emptyState = document.getElementById('emptyState');
+    const clearBtn = document.getElementById('clearBtn');
 
-    // Referências aos elementos de resultado
     const resultElements = {
         formatDashHyphen: document.getElementById('formatDashHyphen'),
         formatColon: document.getElementById('formatColon'),
@@ -12,99 +12,100 @@ document.addEventListener('DOMContentLoaded', function() {
         formatNoSeparator: document.getElementById('formatNoSeparator'),
         formatSpaces: document.getElementById('formatSpaces'),
         formatHP: document.getElementById('formatHP'),
-        formatFourByFour: document.getElementById('formatFourByFour') // Novo elemento adicionado
+        formatFourByFour: document.getElementById('formatFourByFour')
     };
 
-    // Função para normalizar o MAC Address (remove separadores e converte para maiúsculas)
+    const resultCards = document.querySelectorAll('.result-card');
+
     function normalizeMac(mac) {
         if (!mac) return '';
+        // Remove all non-hex characters
         return mac.replace(/[^0-9a-fA-F]/g, '').toUpperCase();
     }
 
-    // Função para validar o MAC Address normalizado
     function isValidNormalizedMac(normalizedMac) {
         return normalizedMac.length === 12 && /^[0-9A-F]{12}$/.test(normalizedMac);
     }
 
-    // Função para formatar o MAC Address
-    function formatMac(normalizedMac, separator, groupSize, lowercase = false) {
+    function formatMac(normalizedMac, separator, groupSize) {
         if (!normalizedMac) return '';
-        let formatted = '';
+        let formatted = [];
         for (let i = 0; i < normalizedMac.length; i += groupSize) {
-            formatted += normalizedMac.substring(i, i + groupSize);
-            if (i + groupSize < normalizedMac.length) {
-                formatted += separator;
-            }
+            formatted.push(normalizedMac.substring(i, i + groupSize));
         }
-        return lowercase ? formatted.toLowerCase() : formatted;
+        return formatted.join(separator);
     }
 
-    // Função para limpar os resultados
-    function clearResults() {
-        macError.textContent = '';
-        for (const key in resultElements) {
-            resultElements[key].textContent = '';
-            // Remover event listeners antigos para evitar duplicação (opcional, mas boa prática)
-            resultElements[key].onclick = null;
-        }
-    }
-
-    // Função para copiar texto para a área de transferência
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(function() {
-            showCopyMessage();
-        }).catch(function(err) {
-            console.error('Erro ao copiar para a área de transferência: ', err);
-            // Poderia mostrar uma mensagem de erro aqui
-        });
-    }
-
-    // Função para mostrar a mensagem de "Copiado!"
-    let copyMessageTimeout;
-    function showCopyMessage() {
-        copyMessage.classList.add('show');
-        clearTimeout(copyMessageTimeout); // Limpa qualquer timeout anterior
-        copyMessageTimeout = setTimeout(() => {
-            copyMessage.classList.remove('show');
-        }, 2000); // Mensagem some após 2 segundos
-    }
-
-    generateBtn.addEventListener('click', function() {
-        clearResults();
-
-        const rawMac = macInput.value.trim();
-        const normalizedMac = normalizeMac(rawMac);
-
-        if (!isValidNormalizedMac(normalizedMac)) {
-            macError.textContent = 'Por favor, insira um MAC Address válido (12 caracteres hexadecimais).';
+    function updateUI(normalizedMac) {
+        if (normalizedMac.length === 0) {
+            resultsContainer.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            macError.classList.remove('show');
             return;
         }
 
-        // --- Geração e exibição das variações ---
+        if (!isValidNormalizedMac(normalizedMac)) {
+            if (normalizedMac.length >= 12) {
+                macError.classList.add('show');
+            } else {
+                macError.classList.remove('show');
+            }
+            resultsContainer.classList.add('hidden');
+            emptyState.classList.remove('hidden');
+            return;
+        }
+
+        macError.classList.remove('show');
+        resultsContainer.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+
         const variations = {
-            dashHyphen: formatMac(normalizedMac, '-', 2),
-            colon: formatMac(normalizedMac, ':', 2),
-            dot: formatMac(normalizedMac, '.', 4),
-            noSeparator: normalizedMac,
-            spaces: formatMac(normalizedMac, ' ', 2),
-            hp: `${formatMac(normalizedMac.substring(0, 6), '', 6)}-${formatMac(normalizedMac.substring(6), '', 6)}`,
-            fourByFour: `${normalizedMac.substring(0, 4)}-${normalizedMac.substring(4, 8)}-${normalizedMac.substring(8, 12)}` // Novo formato
+            formatDashHyphen: formatMac(normalizedMac, '-', 2),
+            formatColon: formatMac(normalizedMac, ':', 2),
+            formatDot: formatMac(normalizedMac, '.', 4),
+            formatNoSeparator: normalizedMac,
+            formatSpaces: formatMac(normalizedMac, ' ', 2),
+            formatHP: `${normalizedMac.substring(0, 6)}-${normalizedMac.substring(6)}`,
+            formatFourByFour: `${normalizedMac.substring(0, 4)}-${normalizedMac.substring(4, 8)}-${normalizedMac.substring(8, 12)}`
         };
 
-        resultElements.formatDashHyphen.textContent = variations.dashHyphen;
-        resultElements.formatColon.textContent = variations.colon;
-        resultElements.formatDot.textContent = variations.dot;
-        resultElements.formatNoSeparator.textContent = variations.noSeparator;
-        resultElements.formatSpaces.textContent = variations.spaces;
-        resultElements.formatHP.textContent = variations.hp;
-        resultElements.formatFourByFour.textContent = variations.fourByFour; // Exibe o novo formato
-
-        // --- Adiciona event listeners para copiar ---
         for (const key in resultElements) {
-            if (resultElements[key].textContent) { // Só adiciona se o conteúdo não estiver vazio
-                const textToCopy = resultElements[key].textContent;
-                resultElements[key].onclick = () => copyToClipboard(textToCopy);
-            }
+            resultElements[key].textContent = variations[key];
         }
+    }
+
+    function copyToClipboard(text, card) {
+        navigator.clipboard.writeText(text).then(() => {
+            card.classList.add('copied');
+            setTimeout(() => {
+                card.classList.remove('copied');
+            }, 1500);
+        }).catch(err => {
+            console.error('Falha ao copiar:', err);
+        });
+    }
+
+    // Event Listeners
+    macInput.addEventListener('input', (e) => {
+        const normalized = normalizeMac(e.target.value);
+        updateUI(normalized);
     });
+
+    clearBtn.addEventListener('click', () => {
+        macInput.value = '';
+        updateUI('');
+        macInput.focus();
+    });
+
+    resultCards.forEach(card => {
+        card.addEventListener('click', () => {
+            const valueElement = card.querySelector('.result-value');
+            if (valueElement && valueElement.textContent) {
+                copyToClipboard(valueElement.textContent, card);
+            }
+        });
+    });
+
+    // Initial focus
+    macInput.focus();
 });
